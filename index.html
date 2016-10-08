@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    </head>
+    <body>
+        <div class="container">
+            <h1>Vending machine simulation</h1>
+        </div>
+        <div class="col-md-8" data-bind="foreach:cells">
+            <div class="col-md-4" data-bind="click: $parent.select">
+                <img data-bind="attr: {src: product.category.getImageUrl(),
+                    alt: product.category.name}" />
+            </div>
+            <div class="col-md-6 productInfo">
+                <div data-bind="text:product.name"></div>
+                <h4 data-bind="text: stock"></h4>
+                <h3 data-bind="text: '$ ' + product.price"></h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <h4>Paid: $
+                <span id="total" data-bind="text: paid"></span>
+                </h4>
+                <br />
+                <br />
+                <div data-bind="foreach: acceptedCoins">
+                    <img data-bind="attr: { src: getImageUrl(),
+                        alt: value }, click: $parent.acceptCoin" />
+                </div>
+            
+        </div>
+
+        <h3 data-bind="with: selectedCell">
+            <div data-bind="text: product.name"></div>
+            <div>$
+                <span data-bind="text: product.price" ></span>
+            </div>
+        </h3>
+
+        <button class="btn btn-primary payButton"
+            data-bind="enable: canPay, click:pay">
+            Pay
+        </button>
+
+        <script src="js/lib/knockout-3.4.0.js"></script>
+        <!-- In module mode, use require.js to bootstrap the app. -->
+        <script src="js/lib/require.js"></script>
+        <script>
+            // Tell requirejs to load a VendingMachine module
+            require(["js/vendingMachine"], function(machineModule){
+                // Initialize the provided VendingMachine.
+                var machine = new machineModule.VendingMachine();
+                machine.size = machineModule.VendingMachineSize.medium;
+                ko.applyBindings(machine);
+            });
+        </script>
+    </body>        
+</html>

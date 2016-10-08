@@ -1,0 +1,72 @@
+Typescript definition files provide TS type information for JavaScript libraries like Knockout, etc. Authored by third parties.
+Use them so that your IDE can perform type checking
+
+let keyword: block-level scope. Better than evil global scope!
+
+Arrow functions change the meaning of this keyword.
+In an arrow function, this refers to the enclosing object that the function belongs to.
+Otherwise, this keyword refers to the window object!
+
+Global namespace: application-wide bucket of classes
+No problem as long as all class names are unique. Naming collisions cause first class to be overridden.
+In large applications, group classes some kind of container to reduce the chance of naming conflicts (also improves encapsulation)
+-Namespaces. Use the export keyword to make classes available outside of their namespace.
+-Must use the fully qualified name to access a class in a namespace.
+YOu can also nest namespaces. Inner namespaces must be exported.
+OR, you can import classes as a shortcut instead of using fully qualified names with namespaces.
+
+-Modules: Group code, similar to namespaces, but the .ts/.js file serves as the container.
+-All modules have to be explicitly imported into other files, then other files can use anything in the module.
+-All or nothing: All files must be modules for this to work. Best for bigger projects
+-Need external module loader library. Loads module when imported, no <script> tags needed
+import * as Coin from './coin'
+Alternative to triple-slash reference path.
+Can also export all types at once at the end of a file: export { ProductCategory, SodaCategory, ChipsCategory }
+
+Can also export default function outside of any class (only one per module)
+
+In module mode use "outDir" option in tsconfig.json to create a new directory with one js file per ts file.
+
+Typescript supports generics.
+
+class Collection<T>{ 
+    add(item: T){...}
+
+}
+let stringCollection = new Collection<string>()
+
+Collection constraints: what if the T objects have to implement certain properties or have certain fields?
+Below, T must be a descendant of Coin in order to use its value property.
+
+class CoinCollection<T extends Coin>{
+
+    private allCoins = new Array<T>();
+
+    add(item: T) {
+        this.allCoins.push(item);
+    }
+
+    getTotalValue() {
+        let total = 0;
+        this.allCoins.forEach(c => total += c.value);
+        return total;
+    }
+
+}
+
+Decorators: used by Angular 2
+Decorators are a special kind of function
+Can be used on classes, methods, properties, and parameters
+Reusable
+Experimental: enable in tsconfig.json
+Component decorator works with the class below it
+
+@Component({
+    template: "<h1>Hello {{name}}</h1>"
+})
+class HomePageComponent {
+
+    name: "Angular2";
+}
+
+The point of namespaces and modules is to expose as little as possible to the global namespace
